@@ -30,7 +30,7 @@ namespace ConstructionLine.CodingChallenge.Tests.SampleData
         {
             
             var sizes = Size.All;
-            var index = _random.Next(0, sizes.Count);
+            var index = _random.Next(0, sizes.Count-1);
             return sizes.ElementAt(index);
         }
 
@@ -38,7 +38,7 @@ namespace ConstructionLine.CodingChallenge.Tests.SampleData
         private Color GetRandomColor()
         {
             var colors = Color.All;
-            var index = _random.Next(0, colors.Count);
+            var index = _random.Next(0, colors.Count-1);
             return colors.ElementAt(index);
         }
     }

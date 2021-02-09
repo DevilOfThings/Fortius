@@ -10,13 +10,13 @@ namespace ConstructionLine.CodingChallenge.Tests
     public class SearchEnginePerformanceTests : SearchEngineTestsBase
     {
         private List<Shirt> _shirts;
-        private SearchEngine _searchEngine;
+        private SearchEngine _searchEngine;        
 
         [SetUp]
         public void Setup()
         {
-            
-            var dataBuilder = new SampleDataBuilder(50000);
+
+            var dataBuilder = new SampleDataBuilder(50000);            
 
             _shirts = dataBuilder.CreateShirts();
 
@@ -24,7 +24,7 @@ namespace ConstructionLine.CodingChallenge.Tests
         }
 
 
-        [Test]
+        [Test]       
         public void PerformanceTest()
         {
             var sw = new Stopwatch();
@@ -32,7 +32,8 @@ namespace ConstructionLine.CodingChallenge.Tests
 
             var options = new SearchOptions
             {
-                Colors = new List<Color> { Color.Red }
+                Colors = new List<Color> { Color.Red },
+                Sizes = new List<Size> { Size.Small }
             };
 
             var results = _searchEngine.Search(options);
@@ -44,5 +45,6 @@ namespace ConstructionLine.CodingChallenge.Tests
             AssertSizeCounts(_shirts, options, results.SizeCounts);
             AssertColorCounts(_shirts, options, results.ColorCounts);
         }
+        
     }
 }

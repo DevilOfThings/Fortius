@@ -32,14 +32,19 @@ namespace ConstructionLine.CodingChallenge.Tests
         {
             Assert.That(sizeCounts, Is.Not.Null);
 
-            foreach (var size in Size.All)
+            foreach (var size in searchOptions.Sizes)
             {
                 var sizeCount = sizeCounts.SingleOrDefault(s => s.Size.Id == size.Id);
+                // Is actually possible for size count to be null, if it's not added to the shirt list, can be demonstrated by setting the SampleDataBuilder to a low number
                 Assert.That(sizeCount, Is.Not.Null, $"Size count for '{size.Name}' not found in results");
+
+                var test = shirts
+                    .Select(s => s.Size.Id == size.Id
+                                && (searchOptions.Colors.Any() && searchOptions.Colors.Select(c => c.Id).Contains(s.Color.Id)));
 
                 var expectedSizeCount = shirts
                     .Count(s => s.Size.Id == size.Id
-                                && (!searchOptions.Colors.Any() || searchOptions.Colors.Select(c => c.Id).Contains(s.Color.Id)));
+                                && (searchOptions.Colors.Any() && searchOptions.Colors.Select(c => c.Id).Contains(s.Color.Id)));
 
                 Assert.That(sizeCount.Count, Is.EqualTo(expectedSizeCount), 
                     $"Size count for '{sizeCount.Size.Name}' showing '{sizeCount.Count}' should be '{expectedSizeCount}'");
@@ -51,14 +56,19 @@ namespace ConstructionLine.CodingChallenge.Tests
         {
             Assert.That(colorCounts, Is.Not.Null);
             
-            foreach (var color in Color.All)
+            foreach (var color in searchOptions.Colors)
             {
                 var colorCount = colorCounts.SingleOrDefault(s => s.Color.Id == color.Id);
+                // Is actually possible for color count to be null, if it's not added to the shirt list, can be demonstrated by setting the SampleDataBuilder to a low number
                 Assert.That(colorCount, Is.Not.Null, $"Color count for '{color.Name}' not found in results");
+
+                var test = shirts
+                    .Select(c => c.Color.Id == color.Id
+                                && (searchOptions.Sizes.Any() && searchOptions.Sizes.Select(s => s.Id).Contains(c.Size.Id)));
 
                 var expectedColorCount = shirts
                     .Count(c => c.Color.Id == color.Id  
-                                && (!searchOptions.Sizes.Any() || searchOptions.Sizes.Select(s => s.Id).Contains(c.Size.Id)));
+                                && (searchOptions.Sizes.Any() && searchOptions.Sizes.Select(s => s.Id).Contains(c.Size.Id)));
 
                 Assert.That(colorCount.Count, Is.EqualTo(expectedColorCount),
                     $"Color count for '{colorCount.Color.Name}' showing '{colorCount.Count}' should be '{expectedColorCount}'");

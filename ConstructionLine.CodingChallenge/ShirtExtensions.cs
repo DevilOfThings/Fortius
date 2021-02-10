@@ -5,35 +5,29 @@ namespace ConstructionLine.CodingChallenge
 {
     public static class ShirtExtensions
     {        
-        public static IReadOnlyCollection<SizeCount> ShirtSizeCounts(this IReadOnlyCollection<Shirt> shirts, IReadOnlyCollection<Size> sizes)
+        public static IEnumerable<SizeCount> ShirtSizeCounts(this IReadOnlyCollection<Shirt> shirts, IReadOnlyCollection<Size> sizes)
         {
             var query =
-                    from sz in Size.All
-                    join s in (from s2 in shirts
-                               where sizes.Contains(s2.Size)
-                               select s2)
-                            on sz.Id equals s.Size.Id
-                            into grp
-                    select new SizeCount() { Size = sz, Count = grp.Count() };
-
-            return query.ToList();           
+                    from all in Size.All                    
+                    join z in sizes on all.Id equals z.Id into grp
+                    join s in shirts on all.Id equals s.Size.Id into available                                                         
+                    select new SizeCount() { Size = all, Count = available.Count() };
+            
+            return query;          
         }
 
-        public static IReadOnlyCollection<ColorCount> ShirtColorCounts(this IReadOnlyCollection<Shirt> shirts, IReadOnlyCollection<Color> colors)
+        public static IEnumerable<ColorCount> ShirtColorCounts(this IReadOnlyCollection<Shirt> shirts, IReadOnlyCollection<Color> colors)
         {
             var query =
-                    from c in Color.All
-                    join s in (from s2 in shirts
-                               where colors.Contains(s2.Color)
-                               select s2)
-                            on c.Id equals s.Color.Id
-                            into grp
-                    select new ColorCount { Color = c, Count = grp.Count() };
+                    from all in Color.All
+                    join z in colors on all.Id equals z.Id into grp
+                    join s in shirts on all.Id equals s.Color.Id into available
+                    select new ColorCount() { Color = all, Count = available.Count() };
 
-            return query.ToList();            
+            return query;           
         }
 
-        public static IReadOnlyCollection<Shirt> SearchShirtColorsAndSizes(this IReadOnlyCollection<Shirt> shirts, IReadOnlyCollection<Color> colors, IReadOnlyCollection<Size> sizes)
+        public static IEnumerable<Shirt> SearchShirtColorsAndSizes(this IReadOnlyCollection<Shirt> shirts, IReadOnlyCollection<Color> colors, IReadOnlyCollection<Size> sizes)
         {                        
             var query = from s in shirts
                    from c in colors
@@ -42,7 +36,7 @@ namespace ConstructionLine.CodingChallenge
                    where s.Size.Id == z.Id
                    select s;
 
-            return query.ToList();
+            return query;
         }
     }
 }
